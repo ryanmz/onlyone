@@ -1140,7 +1140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tagCell: {fileID: 16844495}
   distance: 0
-  speed: 50
+  speed: 100
   player: {fileID: 823870930}
 --- !u!1 &1843946683
 GameObject:
