@@ -7,6 +7,19 @@
 
 }
 
+public enum CellEnum
+{
+    cStart = 0,
+    cEnd = 1,
+    cBlank = 2,
+    cArrow = 3,
+    cActionPoint = 4,
+    cBlock = 5,
+    cUnknown = 6,
+    cDamage = 7,
+
+}
+
 public class CommonFunction:Singleton<CommonFunction>
 {
     public float DirectValue(DirectionEnum dir)

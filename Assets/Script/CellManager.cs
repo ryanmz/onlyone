@@ -11,6 +11,7 @@ public class CellManager : MonoBehaviour
     public float speed;
     public RectTransform player;
 
+    public DirectionEnum characterDir;
 
     private Vector2 dir;
     private DragHandler[,] grids = new DragHandler[2, 2];
@@ -43,13 +44,24 @@ public class CellManager : MonoBehaviour
 
         if (this.distance < 10.0f)
         {
-            this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
+            this.tagCell = this.ArrowSelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
 
         }
 
     }
 
-    public RectTransform SelectNewCell(DirectionEnum dir)
+    // 空白格功能
+    #region
+    public RectTransform BlankSelectNewCell()
+    {
+
+        return this.tagCell;
+    }
+    #endregion
+
+    // 箭头格功能 
+    #region
+    public RectTransform ArrowSelectNewCell(DirectionEnum dir)
     {
         if(dir == DirectionEnum.cUpDir)
         {
@@ -97,6 +109,9 @@ public class CellManager : MonoBehaviour
         }
         return this.tagCell;
     }
+    #endregion
+
+
     private int GetRow()
     {
 
