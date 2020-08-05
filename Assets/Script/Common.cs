@@ -1,9 +1,12 @@
-﻿public enum DirectionEnum 
+﻿using UnityEngine;
+
+public enum DirectionEnum 
 {
     cUpDir = 0,
     cLeftDir = 1,
     cDownDir = 2,
     cRightDir = 3,
+    cNone = 4,
 
 }
 
@@ -20,8 +23,17 @@ public enum CellEnum
 
 }
 
+
 public class CommonFunction:Singleton<CommonFunction>
 {
+    public bool GameStart = false;
+
+
+    public void SetGameState(bool start)
+    {
+        this.GameStart = start;
+    }
+
     public float DirectValue(DirectionEnum dir)
     {
         if(dir == DirectionEnum.cUpDir)
@@ -63,7 +75,44 @@ public class CommonFunction:Singleton<CommonFunction>
         {
             return DirectionEnum.cRightDir;
         }
-        return DirectionEnum.cRightDir;
+        return DirectionEnum.cNone;
 
+    }
+
+    public Sprite CellImage(CellEnum cell)
+    {
+        if(cell == CellEnum.cStart)
+        {
+            return null;
+        }
+        else if (cell == CellEnum.cEnd)
+        {
+            return null;
+        }
+        else if (cell == CellEnum.cBlank)
+        {
+            return Resources.Load("Image/blank", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == CellEnum.cArrow)
+        {
+            return Resources.Load("Image/direct", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == CellEnum.cActionPoint)
+        {
+            return null;
+        }
+        else if (cell == CellEnum.cBlock)
+        {
+            return null;
+        }
+        else if (cell == CellEnum.cUnknown)
+        {
+            return null;
+        }
+        else if (cell == CellEnum.cDamage)
+        {
+            return null;
+        }
+        return null;
     }
 }

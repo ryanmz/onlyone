@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CellManager : MonoBehaviour
 {
+
     public RectTransform tagCell;
     public RectTransform startCell;      // 起点
     public float distance;
@@ -18,40 +19,44 @@ public class CellManager : MonoBehaviour
     public int actionPoint = 1;          // 行动点
 
     private Vector2 dir;
-    private DragHandler[,] grids = new DragHandler[2, 2];
-    // Start is called before the first frame update
-    void Start()
+    private DragHandler[,] grids;
+
+    void Update()
     {
+        if (CommonFunction.Instance.GameStart)
+        {
+            this.UpdateGridsCells();
+            this.dir = (this.tagCell.position - this.player.position).normalized;
+            this.player.Translate(this.dir * Time.deltaTime * this.speed);
+
+            this.distance = Vector2.Distance(this.tagCell.position, this.player.position);
+
+            if (this.distance < 10.0f)
+            {
+                this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
+
+            }
+        }
+
+    }
+
+    public void UpdateGridsCells()
+    {
+        int row = (int)(this.GetComponent<RectTransform>().sizeDelta.y) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.y);
+        int col = (int)(this.GetComponent<RectTransform>().sizeDelta.x) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.x);
+        grids = new DragHandler[row, col];
         DragHandler[] cells = GetComponentsInChildren<DragHandler>();
         int index = 0;
-        for(int i = 0; i < grids.GetLength(0); i++)
+        for (int i = 0; i < grids.GetLength(0); i++)
         {
-            for(int j = 0; j < grids.GetLength(1); j++)
+            for (int j = 0; j < grids.GetLength(1); j++)
             {
                 grids[i, j] = cells[index];
                 Debug.Log(grids[i, j].gameObject.name);
                 index++;
             }
-            
-        }
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        this.dir = (this.tagCell.position - this.player.position).normalized;
-        this.player.Translate(this.dir * Time.deltaTime * this.speed);
-
-        this.distance = Vector2.Distance(this.tagCell.position, this.player.position);
-
-        if (this.distance < 10.0f)
-        {
-            this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
 
         }
-
     }
 
     // 起点(输入为起始方向)
@@ -173,6 +178,8 @@ public class CellManager : MonoBehaviour
     #endregion
 
 
+    //公共方法
+    #region
     private int GetRow()
     {
 
@@ -205,5 +212,6 @@ public class CellManager : MonoBehaviour
         }
         return 0;
     }
+    #endregion
 
 }
