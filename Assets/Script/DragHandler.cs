@@ -5,17 +5,24 @@ using UnityEngine.UI;
 
 public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    //公共变量
+    //公有变量
     #region
-    public DirectionEnum currentDir;
+    public CellEnum currentCellType;
     public bool enableClick = false;
+    public RectTransform parentCell;
+    public DirectionEnum currentDir;
     #endregion
 
     //私有变量
     #region
     private RectTransform rectTran;
-    private Image colorImg;
+    private CanvasGroup tempBlock;
+    private Vector2 offset= new Vector3();
+    private Image cellImage;
     private Color originCol;
+
+    private Vector3 fromScale = new Vector3(1.0f, 1.0f, 1.0f);
+    private Vector3 toScale = new Vector3(0.8f, 0.8f, 1.0f);
     #endregion
 
     //周期函数
@@ -23,12 +30,29 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     void Start()
     {
         this.rectTran = this.GetComponent<RectTransform>();
+        this.cellImage = this.GetComponent<Image>();
         this.originCol = this.GetComponent<Image>().color;
-
-
-        currentDir = CommonFunction.Instance.JudgeDir(rectTran.transform.localEulerAngles.z);
+        this.parentCell = this.rectTran.parent.gameObject.GetComponent<RectTransform>();
+        this.tempBlock = this.gameObject.AddComponent<CanvasGroup>();
+        this.SetCellInfo(this.currentCellType, this.currentDir);
 
     }
+
+    //方格信息设置
+    public void SetCellInfo(CellEnum cellType, DirectionEnum dir)
+    {
+        this.currentCellType = cellType;
+        
+        if (cellType != CellEnum.cArrow)
+            this.currentDir = DirectionEnum.cNone;
+        else
+            this.currentDir = dir;
+
+        this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+        this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
+
+    }
+
 
     #endregion
 
@@ -39,9 +63,24 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         if (this.enableClick)
         {
-            this.colorImg = this.GetComponent<Image>();
-            this.colorImg.color = Color.green;
+            this.rectTran.localScale = this.toScale;
+            this.cellImage = this.GetComponent<Image>();
+            this.cellImage.color = Color.green;
+
+            RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+            Vector2 mouseDown = eventData.position;
+            Vector2 mouseUguiPos = new Vector2();
+
+            bool isRect = RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, mouseDown, eventData.enterEventCamera, out mouseUguiPos);
+
+            if (isRect)
+            {
+                this.offset = this.rectTran.anchoredPosition - mouseUguiPos;
+            }
+            this.tempBlock.blocksRaycasts = false;
         }
+
+
 
     }
 
@@ -50,6 +89,20 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         if (this.enableClick)
         {
+            //拖拽移动
+            RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+            Vector2 mouseDown = eventData.position;
+            Vector2 mouseUguiPos = new Vector2();
+
+            bool isRect = RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, mouseDown, eventData.enterEventCamera, out mouseUguiPos);
+
+            if (isRect)
+            {
+                this.rectTran.anchoredPosition = this.offset + mouseUguiPos;
+            }
+            //拉扯方向
+            #region
+            /*
             RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
             Vector2 mouseDown = eventData.position;
             Vector2 mouseUguiPos = new Vector2();
@@ -83,7 +136,8 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
                 }
                 this.currentDir = CommonFunction.Instance.JudgeDir(faceToValue);
                 this.rectTran.localRotation = Quaternion.Euler(0, 0, faceToValue);
-            }
+            }*/
+            #endregion
         }
 
     }
@@ -93,11 +147,32 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         if (this.enableClick)
         {
-            this.colorImg = this.GetComponent<Image>();
-            this.colorImg.color = originCol;
+            this.rectTran.localScale = this.fromScale;
+            this.cellImage = this.GetComponent<Image>();
+            this.cellImage.color = originCol;
+
+            RectTransform objectParent = eventData.pointerEnter.GetComponent<RectTransform>();
+
+            if ((objectParent.GetComponents<DragHandler>() != null)&&objectParent.GetComponent<DragHandler>().currentCellType == CellEnum.cBlank)
+            {
+
+                this.rectTran.SetParent(objectParent.parent);
+                this.parentCell = objectParent.parent.GetComponent<RectTransform>();
+                Destroy(objectParent.gameObject);
+                CommonFunction.Instance.SetGameState(true);
+            }
+            else
+            {
+                this.rectTran.SetParent(this.parentCell);
+            }
+            this.rectTran.localPosition = Vector2.zero;
+            this.tempBlock.blocksRaycasts = true;
+
         }
+        
     }
     #endregion
+
 
 
 
