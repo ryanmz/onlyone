@@ -33,8 +33,36 @@ public class CellManager : MonoBehaviour
 
             if (this.distance < 10.0f)
             {
-                this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
+                //this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
+                CellEnum cellType = this.tagCell.GetComponent<DragHandler>().currentCellType;
+                switch (cellType)
+                {
+                    case CellEnum.cStart:
+                        this.tagCell = this.StartCell(this.characterDir);
+                        break;
+                    case CellEnum.cEnd:
+                        this.tagCell = this.EndCell();
+                        break;
+                    case CellEnum.cBlank:
+                        this.tagCell = this.BlankCell();
+                        break;
+                    case CellEnum.cArrow:
+                        this.tagCell = this.ArrowCell(this.tagCell.GetComponent<DragHandler>().currentDir);
+                        break;
+                    case CellEnum.cActionPoint:
+                        this.tagCell = this.ActionPointCell();
+                        break;
+                    case CellEnum.cUnknown:
+                        this.tagCell = this.UnknownCell();
+                        break;
+                    case CellEnum.cDamage:
+                        this.tagCell = this.DamageCell();
+                        break;
+                    default:
+                        Debug.Log("Unknown cell type!");
+                        break;
 
+                }
             }
         }
 
@@ -105,8 +133,8 @@ public class CellManager : MonoBehaviour
     #region
     public RectTransform UnknownCell()
     {
-        DirectionEnum dir = 0;
-        // ... 修改格子属性并得到要移动的方向 dir
+        DirectionEnum dir = this.tagCell.GetComponent<DragHandler>().currentDir;
+        // ... 修改格子属性
         return this.SelectNewCell(dir);
     }
     #endregion
