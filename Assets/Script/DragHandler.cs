@@ -9,6 +9,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     //公有变量
     #region
     public CellEnum currentCellType;
+    public SpCellEnum spCellType = SpCellEnum.sNone;
     public bool enableClick = false;
     public RectTransform parentCell;
     public DirectionEnum currentDir;
@@ -17,7 +18,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     //问号格专属
     #region
     public bool isUnknown = false;
-    public CellEnum hiddenCellType;
+    public CellEnum hiddenCellType = CellEnum.cBlank;
     public DirectionEnum hiddenDir;
     #endregion
 

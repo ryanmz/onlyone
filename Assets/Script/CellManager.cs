@@ -268,6 +268,83 @@ public class CellManager : MonoBehaviour
         return this.tagCell;
     }
 
+    // 处理特殊方格(可选择加入动画效果)
+    #region
+    private void SpCellHandler()
+    {
+        for (int i = 0; i < this.grids.GetLength(0); i++)
+        {
+            for (int j = 0; j < this.grids.GetLength(1); j++)
+            {
+                SpCellEnum sp = this.grids[i, j].spCellType;
+                if (sp != SpCellEnum.sNone)
+                {
+                    if (i != 0)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i - 1, j].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f % 360);
+                                break;
+                        }
+                    }
+                    if (j != 0)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i, j - 1].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f % 360);
+                                break;
+                        }
+                    }
+                    if (i != this.grids.GetLength(0) - 1)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i + 1, j].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f % 360);
+                                break;
+                        }
+                    }
+                    if (j != this.grids.GetLength(1) - 1)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i, j + 1].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir(CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f % 360);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #endregion
+
     //游戏状态管理
     #region
     //准备游戏
@@ -283,6 +360,8 @@ public class CellManager : MonoBehaviour
         this.InitGridsCells();
         CommonFunction.Instance.SetGameState(true);
         this.GameButton(GameState.gGaming);
+        // search for SpCell and deal with them
+        SpCellHandler();
     }
 
     //暂停游戏

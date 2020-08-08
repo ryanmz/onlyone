@@ -25,6 +25,14 @@ public enum CellEnum
 
 } //方格类型
 
+public enum SpCellEnum
+{
+    sNone = 0,
+    sBlank = 1,
+    sClockwise = 2,
+    sAntiClockwise = 3,
+} //特殊方格类型
+
 public enum GameState
 {
     gSet = 0,

@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 1
@@ -345,6 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 1
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 0
@@ -440,6 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 2
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 4
@@ -614,6 +617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 4
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 4
@@ -940,6 +944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 2
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 4
@@ -1035,6 +1040,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 0
@@ -1477,6 +1483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 2
@@ -1600,6 +1607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 6
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 2
@@ -2317,6 +2325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 3
@@ -2412,6 +2421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 3
@@ -3289,6 +3299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 2
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 2
@@ -4671,7 +4682,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7af540d41d5c22438d8311ae9d320d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCellType: 3
+  currentCellType: 2
+  spCellType: 3
   enableClick: 1
   parentCell: {fileID: 0}
   currentDir: 0
@@ -5111,6 +5123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
+  spCellType: 0
   enableClick: 0
   parentCell: {fileID: 0}
   currentDir: 3
