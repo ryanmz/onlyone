@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
 public class CellManager : MonoBehaviour
 {
 
+    //数据管理
+    #region
+
+
+    //角色信息
+    #region
     public RectTransform tagCell;
     public RectTransform startCell;      // 起点
     public float distance;
