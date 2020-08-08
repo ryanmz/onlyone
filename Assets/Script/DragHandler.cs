@@ -14,6 +14,13 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     public DirectionEnum currentDir;
     #endregion
 
+    //问号格专属
+    #region
+    public bool isUnknown = false;
+    public CellEnum hiddenCellType;
+    public DirectionEnum hiddenDir;
+    #endregion
+
     //私有变量
     #region
     private RectTransform rectTran;

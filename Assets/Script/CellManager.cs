@@ -103,13 +103,13 @@ public class CellManager : MonoBehaviour
                         this.tagCell = this.EndCell();
                         break;
                     case CellEnum.cBlank:
-                        this.tagCell = this.BlankCell();
+                        this.tagCell = this.BlankCell(this.characterDir);
                         break;
                     case CellEnum.cArrow:
                         this.tagCell = this.ArrowCell(this.tagCell.GetComponent<DragHandler>().currentDir);
                         break;
                     case CellEnum.cActionPoint:
-                        this.tagCell = this.ActionPointCell();
+                        this.tagCell = this.ActionPointCell(this.characterDir);
                         break;
                     case CellEnum.cUnknown:
                         this.tagCell = this.UnknownCell();
@@ -150,9 +150,9 @@ public class CellManager : MonoBehaviour
 
     // 空白格
     #region
-    public RectTransform BlankCell()
+    public RectTransform BlankCell(DirectionEnum dir)
     {
-        return this.SelectNewCell(this.characterDir);
+        return this.SelectNewCell(dir);
     }
     #endregion
 
@@ -166,10 +166,10 @@ public class CellManager : MonoBehaviour
 
     // 行动点+1格
     #region
-    public RectTransform ActionPointCell()
+    public RectTransform ActionPointCell(DirectionEnum dir)
     {
         actionPoint++;
-        return this.SelectNewCell(this.characterDir);
+        return this.SelectNewCell(dir);
     }
     #endregion
 
@@ -177,9 +177,15 @@ public class CellManager : MonoBehaviour
     #region
     public RectTransform UnknownCell()
     {
-        DirectionEnum dir = this.tagCell.GetComponent<DragHandler>().currentDir;
-        // ... 修改格子属性
-        return this.SelectNewCell(dir);
+        DragHandler currentCell = this.tagCell.GetComponent<DragHandler>();
+        // 修改格子属性
+        if (currentCell.isUnknown == true)
+        {
+            currentCell.isUnknown = false;
+            currentCell.currentCellType = currentCell.hiddenCellType;
+            currentCell.currentDir = currentCell.hiddenDir;
+        }
+        return this.SelectNewCell(currentCell.currentDir);
     }
     #endregion
 
