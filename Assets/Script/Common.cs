@@ -34,7 +34,6 @@ public enum GameState
     gWin = 4,
 }  //游戏状态
 
-
 public class CommonFunction:Singleton<CommonFunction>
 {
     public bool GameStart = false;
