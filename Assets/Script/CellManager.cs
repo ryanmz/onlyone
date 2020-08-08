@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class CellManager : MonoBehaviour
@@ -13,19 +10,76 @@ public class CellManager : MonoBehaviour
     public float speed;
     public RectTransform player;
 
+
+
     public DirectionEnum characterDir;   // 角色的移动方向
     public bool clear = false;           // 通关标识
     public bool over = false;            // 游戏结束标识
     public int actionPoint = 1;          // 行动点
+    #endregion
 
+    //游戏状态
+    #region
+    public GameState currentState;
+
+    //准备开始gSet
+    public Button btnStartGame;
+    public Button btnMenuGame;
+
+    //游戏暂停gPause
+    public RectTransform gameMenu;
+    public Button btnExitGame1;
+    public Button btnReStartGame1;
+    public Button btnReturn;
+
+    //游戏重设gReset
+    public RectTransform gameReset;
+    public Button btnResetGame1;
+    public Button btnReStartGame2;
+    public Button btnExitGame2;
+
+    //游戏胜利gWin
+    public RectTransform gameWin;
+    public Button btnReStartGame3;
+    public Button btnExitGame3;
+    #endregion
+
+    //地图方格信息
+    #region
     private Vector2 dir;
     private DragHandler[,] grids;
+    #endregion
+
+
+    #endregion
+
+
+    //生命周期
+    #region
+    void Start()
+    {
+        this.SetState();
+        this.EventBind();
+
+    }//初始化
+
+    void EventBind()
+    {
+        this.btnStartGame.onClick.AddListener(this.GamingState);
+        this.btnMenuGame.onClick.AddListener(this.PauseState);
+        this.btnReturn.onClick.AddListener(this.ReturnState);
+        this.btnReStartGame1.onClick.AddListener(CommonFunction.Instance.ReStartGame);
+        this.btnReStartGame2.onClick.AddListener(CommonFunction.Instance.ReStartGame);
+        this.btnReStartGame3.onClick.AddListener(CommonFunction.Instance.ReStartGame);
+        this.btnExitGame1.onClick.AddListener(CommonFunction.Instance.ExitGame);
+        this.btnExitGame2.onClick.AddListener(CommonFunction.Instance.ExitGame);
+        this.btnExitGame3.onClick.AddListener(CommonFunction.Instance.ExitGame);
+    }//事件绑定
 
     void Update()
     {
         if (CommonFunction.Instance.GameStart)
         {
-            this.UpdateGridsCells();
             this.dir = (this.tagCell.position - this.player.position).normalized;
             this.player.Translate(this.dir * Time.deltaTime * this.speed);
 
@@ -66,27 +120,11 @@ public class CellManager : MonoBehaviour
             }
         }
 
-    }
+    }//游戏更新
+    #endregion
 
-    public void UpdateGridsCells()
-    {
-        int row = (int)(this.GetComponent<RectTransform>().sizeDelta.y) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.y);
-        int col = (int)(this.GetComponent<RectTransform>().sizeDelta.x) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.x);
-        grids = new DragHandler[row, col];
-        DragHandler[] cells = GetComponentsInChildren<DragHandler>();
-        int index = 0;
-        for (int i = 0; i < grids.GetLength(0); i++)
-        {
-            for (int j = 0; j < grids.GetLength(1); j++)
-            {
-                grids[i, j] = cells[index];
-                Debug.Log(grids[i, j].gameObject.name);
-                index++;
-            }
-
-        }
-    }
-
+    //方格类型管理
+    #region
     // 起点(输入为起始方向)
     #region
     public RectTransform StartCell(DirectionEnum dir)
@@ -100,6 +138,7 @@ public class CellManager : MonoBehaviour
     public RectTransform EndCell()
     {
         clear = true;
+        this.WinState();
         return this.tagCell;
     }
     #endregion
@@ -148,12 +187,16 @@ public class CellManager : MonoBehaviour
         return this.startCell;  // 返回起点位置
     }
     #endregion
+    #endregion
+
+    //游戏状态管理
+    #region
 
     // 移动 
     #region
     public RectTransform SelectNewCell(DirectionEnum dir)
     {
-        if(dir == DirectionEnum.cUpDir)
+        if (dir == DirectionEnum.cUpDir)
         {
             if (this.GetRow() < 1)
             {
@@ -167,7 +210,7 @@ public class CellManager : MonoBehaviour
         }
         else if (dir == DirectionEnum.cDownDir)
         {
-            if (this.GetRow() == (this.grids.GetLength(0)-1))
+            if (this.GetRow() == (this.grids.GetLength(0) - 1))
             {
                 return this.tagCell;
             }
@@ -205,9 +248,115 @@ public class CellManager : MonoBehaviour
     }
     #endregion
 
+    //准备游戏
+    private void SetState()
+    {
+        CommonFunction.Instance.SetGameState(false);
+        this.GameButton(GameState.gSet);
+    }
 
-    //公共方法
+    //进行游戏
+    private void GamingState()
+    {
+        this.InitGridsCells();
+        CommonFunction.Instance.SetGameState(true);
+        this.GameButton(GameState.gGaming);
+    }
+
+    //暂停游戏
+    private void PauseState()
+    {
+        this.GameButton(GameState.gPause);
+    }
+
+    //继续游戏
+    private void ReturnState()
+    {
+        this.GameButton(this.currentState);
+    }
+
+    //返回起点
+    private void ResetState()
+    {
+        CommonFunction.Instance.SetGameState(false);
+        this.GameButton(GameState.gReset);
+    }
+
+    //游戏获胜
+    private void WinState()
+    {
+        CommonFunction.Instance.SetGameState(false);
+        this.GameButton(GameState.gWin);
+    }
+
+    private void GameButton(GameState state)
+    {
+        CommonFunction.Instance.ContinueGame();
+        if (state == GameState.gSet)
+        {
+            this.btnStartGame.gameObject.SetActive(true);
+            this.gameMenu.gameObject.SetActive(false);
+            this.gameReset.gameObject.SetActive(false);
+            this.gameWin.gameObject.SetActive(false);
+            this.currentState = state;
+
+        }
+        else if (state == GameState.gGaming)
+        {
+            this.btnStartGame.gameObject.SetActive(false);
+            this.gameMenu.gameObject.SetActive(false);
+            this.gameReset.gameObject.SetActive(false);
+            this.gameWin.gameObject.SetActive(false);
+            this.currentState = state;
+        }
+        else if (state == GameState.gPause)
+        {
+
+            this.gameMenu.gameObject.SetActive(true);
+            this.gameReset.gameObject.SetActive(false);
+            this.gameWin.gameObject.SetActive(false);
+            CommonFunction.Instance.PauseGame();
+        }
+        else if (state == GameState.gReset)
+        {
+
+            this.gameMenu.gameObject.SetActive(false);
+            this.gameReset.gameObject.SetActive(true);
+            this.gameWin.gameObject.SetActive(false);
+            this.currentState = state;
+        }
+        else if (state == GameState.gWin)
+        {
+            this.gameMenu.gameObject.SetActive(false);
+            this.gameWin.gameObject.SetActive(true);
+            this.currentState = state;
+        }
+    }
+    #endregion
+
+    //游戏地图管理
     #region
+    public void InitGridsCells()
+    {
+        int row = (int)(this.GetComponent<RectTransform>().sizeDelta.y) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.y);
+        int col = (int)(this.GetComponent<RectTransform>().sizeDelta.x) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.x);
+        this.grids = new DragHandler[row, col];
+        DragHandler[] cells = GetComponentsInChildren<DragHandler>();
+        int index = 0;
+        for (int i = 0; i < this.grids.GetLength(0); i++)
+        {
+            for (int j = 0; j < this.grids.GetLength(1); j++)
+            {
+                this.grids[i, j] = cells[index];
+                Debug.Log(grids[i, j].gameObject.name);
+                index++;
+            }
+
+        }
+
+
+    }
+
     private int GetRow()
     {
 
@@ -240,6 +389,7 @@ public class CellManager : MonoBehaviour
         }
         return 0;
     }
+
     #endregion
 
 }
