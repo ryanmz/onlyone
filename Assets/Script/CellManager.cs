@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CellManager : MonoBehaviour
 {
+    public const float minDistance = 10.0f;
 
     public RectTransform tagCell;
     public RectTransform startCell;      // 起点
@@ -31,7 +32,7 @@ public class CellManager : MonoBehaviour
 
             this.distance = Vector2.Distance(this.tagCell.position, this.player.position);
 
-            if (this.distance < 10.0f)
+            if (this.distance < minDistance)
             {
                 //this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
                 CellEnum cellType = this.tagCell.GetComponent<DragHandler>().currentCellType;
@@ -44,13 +45,13 @@ public class CellManager : MonoBehaviour
                         this.tagCell = this.EndCell();
                         break;
                     case CellEnum.cBlank:
-                        this.tagCell = this.BlankCell();
+                        this.tagCell = this.BlankCell(this.characterDir);
                         break;
                     case CellEnum.cArrow:
                         this.tagCell = this.ArrowCell(this.tagCell.GetComponent<DragHandler>().currentDir);
                         break;
                     case CellEnum.cActionPoint:
-                        this.tagCell = this.ActionPointCell();
+                        this.tagCell = this.ActionPointCell(this.characterDir);
                         break;
                     case CellEnum.cUnknown:
                         this.tagCell = this.UnknownCell();
@@ -80,7 +81,7 @@ public class CellManager : MonoBehaviour
             for (int j = 0; j < grids.GetLength(1); j++)
             {
                 grids[i, j] = cells[index];
-                Debug.Log(grids[i, j].gameObject.name);
+                //Debug.Log(grids[i, j].gameObject.name);
                 index++;
             }
 
@@ -106,9 +107,9 @@ public class CellManager : MonoBehaviour
 
     // 空白格
     #region
-    public RectTransform BlankCell()
+    public RectTransform BlankCell(DirectionEnum dir)
     {
-        return this.SelectNewCell(this.characterDir);
+        return this.SelectNewCell(dir);
     }
     #endregion
 
@@ -122,10 +123,10 @@ public class CellManager : MonoBehaviour
 
     // 行动点+1格
     #region
-    public RectTransform ActionPointCell()
+    public RectTransform ActionPointCell(DirectionEnum dir)
     {
         actionPoint++;
-        return this.SelectNewCell(this.characterDir);
+        return this.SelectNewCell(dir);
     }
     #endregion
 
