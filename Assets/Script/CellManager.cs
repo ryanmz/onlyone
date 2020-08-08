@@ -1,13 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
-
-
 public class CellManager : MonoBehaviour
 {
+
     //数据管理
     #region
 
@@ -19,7 +14,7 @@ public class CellManager : MonoBehaviour
     public float distance;
     public float speed;
     public RectTransform player;
-    
+
 
 
     public DirectionEnum characterDir;   // 角色的移动方向
@@ -90,7 +85,6 @@ public class CellManager : MonoBehaviour
     {
         if (CommonFunction.Instance.GameStart)
         {
-
             this.dir = (this.tagCell.position - this.player.position).normalized;
             this.player.Translate(this.dir * Time.deltaTime * this.speed);
 
@@ -128,16 +122,13 @@ public class CellManager : MonoBehaviour
                         break;
 
                 }
-
-                
             }
         }
 
-    }//运行游戏
+    }//游戏更新
     #endregion
 
-
-    //方格类型
+    //方格类型管理
     #region
     // 起点(输入为起始方向)
     #region
@@ -209,10 +200,11 @@ public class CellManager : MonoBehaviour
     #endregion
     #endregion
 
-
-    //公共方法
+    //游戏状态管理
     #region
+
     // 移动 
+    #region
     public RectTransform SelectNewCell(DirectionEnum dir)
     {
         if (dir == DirectionEnum.cUpDir)
@@ -265,9 +257,8 @@ public class CellManager : MonoBehaviour
         }
         return this.tagCell;
     }
+    #endregion
 
-    //游戏状态管理
-    #region
     //准备游戏
     private void SetState()
     {
@@ -321,7 +312,7 @@ public class CellManager : MonoBehaviour
             this.currentState = state;
 
         }
-        else if(state == GameState.gGaming)
+        else if (state == GameState.gGaming)
         {
             this.btnStartGame.gameObject.SetActive(false);
             this.gameMenu.gameObject.SetActive(false);
@@ -329,7 +320,7 @@ public class CellManager : MonoBehaviour
             this.gameWin.gameObject.SetActive(false);
             this.currentState = state;
         }
-        else if(state == GameState.gPause)
+        else if (state == GameState.gPause)
         {
 
             this.gameMenu.gameObject.SetActive(true);
@@ -337,7 +328,7 @@ public class CellManager : MonoBehaviour
             this.gameWin.gameObject.SetActive(false);
             CommonFunction.Instance.PauseGame();
         }
-        else if(state == GameState.gReset)
+        else if (state == GameState.gReset)
         {
 
             this.gameMenu.gameObject.SetActive(false);
@@ -345,7 +336,7 @@ public class CellManager : MonoBehaviour
             this.gameWin.gameObject.SetActive(false);
             this.currentState = state;
         }
-        else if(state == GameState.gWin)
+        else if (state == GameState.gWin)
         {
             this.gameMenu.gameObject.SetActive(false);
             this.gameWin.gameObject.SetActive(true);
@@ -354,8 +345,7 @@ public class CellManager : MonoBehaviour
     }
     #endregion
 
-
-    //地图方块管理
+    //游戏地图管理
     #region
     public void InitGridsCells()
     {
@@ -374,9 +364,10 @@ public class CellManager : MonoBehaviour
             }
 
         }
-        
+
 
     }
+
     private int GetRow()
     {
 
@@ -384,7 +375,7 @@ public class CellManager : MonoBehaviour
         {
             for (int j = 0; j < this.grids.GetLength(1); j++)
             {
-                if (this.tagCell.GetComponent<DragHandler>() == this.grids[i, j])
+                if(this.tagCell.GetComponent<DragHandler>() == this.grids[i, j])
                 {
                     return i;
                 }
@@ -409,8 +400,7 @@ public class CellManager : MonoBehaviour
         }
         return 0;
     }
-    #endregion
-
 
     #endregion
+
 }
