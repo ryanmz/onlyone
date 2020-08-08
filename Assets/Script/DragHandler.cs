@@ -189,8 +189,4 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     }
     #endregion
 
-
-
-
-
 }
