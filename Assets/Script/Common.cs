@@ -53,6 +53,7 @@ public class CommonFunction:Singleton<CommonFunction>
 
     public float DirectValue(DirectionEnum dir)
     {
+        //Debug.Log(dir.ToString());
         if(dir == DirectionEnum.cUpDir)
         {
             return 90.0f;
@@ -74,6 +75,7 @@ public class CommonFunction:Singleton<CommonFunction>
 
     public DirectionEnum JudgeDir(float angle)
     {
+        //Debug.Log(angle);
         if(angle == 90.0f)
         {
             return DirectionEnum.cUpDir;

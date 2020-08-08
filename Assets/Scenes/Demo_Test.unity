@@ -4683,7 +4683,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 2
-  spCellType: 3
+  spCellType: 2
   enableClick: 1
   parentCell: {fileID: 0}
   currentDir: 0
