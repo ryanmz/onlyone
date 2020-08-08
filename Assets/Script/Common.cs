@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public enum DirectionEnum 
 {
@@ -10,7 +8,7 @@ public enum DirectionEnum
     cRightDir = 3,
     cNone = 4,
 
-}//角色运动
+}
 
 public enum CellEnum
 {
@@ -23,21 +21,13 @@ public enum CellEnum
     cUnknown = 6,
     cDamage = 7,
 
-} //方格类型
-
-public enum GameState
-{
-    gSet = 0,
-    gGaming = 1,
-    gPause = 2,
-    gReset = 3,
-    gWin = 4,
-}  //游戏状态
+}
 
 
 public class CommonFunction:Singleton<CommonFunction>
 {
     public bool GameStart = false;
+
 
     public void SetGameState(bool start)
     {
@@ -97,7 +87,7 @@ public class CommonFunction:Singleton<CommonFunction>
         }
         else if (cell == CellEnum.cEnd)
         {
-            return Resources.Load("Image/blank", typeof(Sprite)) as Sprite; ;
+            return null;
         }
         else if (cell == CellEnum.cBlank)
         {
@@ -125,24 +115,4 @@ public class CommonFunction:Singleton<CommonFunction>
         }
         return null;
     }
-
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
-
-    public void ReStartGame()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    public void PauseGame()
-    {
-        Time.timeScale = 0.0f;
-    }
-
-    public void ContinueGame()
-    {
-        Time.timeScale = 1.0f;
-    }
-} //公共方法
+}
