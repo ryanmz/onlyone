@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
@@ -61,7 +62,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     //当鼠标按下时调用 接口对应 IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (this.enableClick)
+        if (this.enableClick&&!CommonFunction.Instance.GameStart)
         {
             this.rectTran.localScale = this.toScale;
             this.cellImage = this.GetComponent<Image>();
@@ -87,8 +88,9 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     //当鼠标拖动时调用 对应接口 IDragHandler
     public void OnDrag(PointerEventData eventData)
     {
-        if (this.enableClick)
+        if (this.enableClick && !CommonFunction.Instance.GameStart)
         {
+
             //拖拽移动
             RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
             Vector2 mouseDown = eventData.position;
@@ -100,6 +102,8 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             {
                 this.rectTran.anchoredPosition = this.offset + mouseUguiPos;
             }
+
+            this.rectTran.transform.SetAsFirstSibling();
             //拉扯方向
             #region
             /*
@@ -145,26 +149,38 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     //当鼠标抬起时调用 对应接口 IPointerUpHandler
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (this.enableClick)
+        if (this.enableClick && !CommonFunction.Instance.GameStart)
         {
             this.rectTran.localScale = this.fromScale;
             this.cellImage = this.GetComponent<Image>();
             this.cellImage.color = originCol;
 
-            RectTransform objectParent = eventData.pointerEnter.GetComponent<RectTransform>();
+            if(eventData.pointerEnter == null)
+            {
+                this.rectTran.localPosition = Vector2.zero;
+                this.tempBlock.blocksRaycasts = true;
+                return;
+            }
 
-            if ((objectParent.GetComponents<DragHandler>() != null)&&objectParent.GetComponent<DragHandler>().currentCellType == CellEnum.cBlank)
+
+            RectTransform targetObj = eventData.pointerEnter.GetComponent<RectTransform>();
+            RectTransform repalceParent = this.rectTran.parent.GetComponent<RectTransform>();
+
+
+            if (targetObj.GetComponent<DragHandler>() != null)
             {
 
-                this.rectTran.SetParent(objectParent.parent);
-                this.parentCell = objectParent.parent.GetComponent<RectTransform>();
-                Destroy(objectParent.gameObject);
-                CommonFunction.Instance.SetGameState(true);
+                if (targetObj.GetComponent<DragHandler>().currentCellType == CellEnum.cBlank)
+                {
+                    this.parentCell = targetObj.parent.GetComponent<RectTransform>();
+                    targetObj.SetParent(repalceParent);
+                    targetObj.localPosition = Vector2.zero;
+                }
+
+                //CommonFunction.Instance.SetGameState(true);
             }
-            else
-            {
-                this.rectTran.SetParent(this.parentCell);
-            }
+ 
+            this.rectTran.SetParent(this.parentCell);
             this.rectTran.localPosition = Vector2.zero;
             this.tempBlock.blocksRaycasts = true;
 
