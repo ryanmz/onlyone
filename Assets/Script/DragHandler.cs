@@ -19,7 +19,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     #region
     public bool isUnknown = false;
     public CellEnum hiddenCellType = CellEnum.cBlank;
-    public DirectionEnum hiddenDir;
+    //public DirectionEnum hiddenDir;
     #endregion
 
     //私有变量
