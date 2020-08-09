@@ -194,7 +194,7 @@ public class CellManager : MonoBehaviour
             // 这里不能设置成false，以保证重置后可以恢复为unknown
             //currentCell.isUnknown = false;
             currentCell.currentCellType = currentCell.hiddenCellType;
-            currentCell.currentDir = currentCell.hiddenDir;
+            //currentCell.currentDir = currentCell.hiddenDir;
         }
         return this.SelectNewCell(currentCell.currentDir);
     }
