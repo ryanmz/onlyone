@@ -4682,8 +4682,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7af540d41d5c22438d8311ae9d320d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCellType: 2
-  spCellType: 2
+  currentCellType: 3
+  spCellType: 1
   enableClick: 1
   parentCell: {fileID: 0}
   currentDir: 0
