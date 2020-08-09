@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -25,7 +25,12 @@ public class CellManager : MonoBehaviour
     public DirectionEnum characterDir;   // 角色的移动方向
     public bool clear = false;           // 通关标识
     public bool over = false;            // 游戏结束标识
+
+    private GameObject parentAction;
+    public DragHandler[] actionCell;
+    public Text actionText;              //行动点文字
     public int actionPoint = 1;          // 行动点
+    private int blankPoint = 0;
     #endregion
 
     //游戏状态
@@ -48,8 +53,9 @@ public class CellManager : MonoBehaviour
     public Button btnReStartGame2;
     public Button btnExitGame2;
 
-    //游戏胜利gWin
-    public RectTransform gameWin;
+    //游戏结果gWin
+    public RectTransform gameOver;
+    public Text resultGame;
     public Button btnReStartGame3;
     public Button btnExitGame3;
     #endregion
@@ -63,13 +69,13 @@ public class CellManager : MonoBehaviour
 
     #endregion
 
-
     //生命周期
     #region
     void Start()
     {
         this.SetState();
         this.EventBind();
+        this.UpdateActionCells();
 
     }//初始化
 
@@ -84,7 +90,54 @@ public class CellManager : MonoBehaviour
         this.btnExitGame1.onClick.AddListener(CommonFunction.Instance.ExitGame);
         this.btnExitGame2.onClick.AddListener(CommonFunction.Instance.ExitGame);
         this.btnExitGame3.onClick.AddListener(CommonFunction.Instance.ExitGame);
+        EventListener.Instance.execute += new EventListener.ListenerHandler(this.UpdateActionCells);
+        this.parentAction = GameObject.Find("Content");
     }//事件绑定
+
+    void UpdateActionCells()
+    {
+        Debug.Log(this.parentAction == null);
+        Debug.Log(this.parentAction.GetComponentsInChildren<DragHandler>() == null);
+        if (this.parentAction.GetComponentsInChildren<DragHandler>() == null)
+            return;
+        this.actionCell = this.parentAction.GetComponentsInChildren<DragHandler>();
+        int blankTem = 0;
+        for(int i = 0; i < this.actionCell.Length; i++)
+        {
+            if(this.actionCell[i].currentCellType == CellEnum.cBlank)
+            {
+                blankTem++;
+            }
+        }
+        if (blankTem > this.blankPoint)
+        {
+            this.actionPoint--;
+
+        }
+        else if(blankTem < this.blankPoint)
+        {
+            this.actionPoint++;
+        }
+        this.blankPoint = blankTem;
+        this.actionText.text = Convert.ToString(this.actionPoint);
+        if (this.actionPoint <= 0)
+        {
+            for (int i = 0; i < this.actionCell.Length; i++)
+            {
+                this.actionCell[i].enableClick = false;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < this.actionCell.Length; i++)
+            {
+                if (this.actionCell[i].currentCellType != CellEnum.cBlank)
+                {
+                    this.actionCell[i].enableClick = true;
+                }
+            }
+        }
+    }
 
     void Update()
     {
@@ -94,9 +147,9 @@ public class CellManager : MonoBehaviour
             this.dir = (this.tagCell.position - this.player.position).normalized;
             this.player.Translate(this.dir * Time.deltaTime * this.speed);
 
-            this.distance = Vector2.Distance(this.tagCell.position, this.player.position);
+            float distance = Vector2.Distance(this.tagCell.position, this.player.position);
 
-            if (this.distance < 10.0f)
+            if (distance < this.distance)
             {
                 //this.tagCell = this.SelectNewCell(this.tagCell.GetComponent<DragHandler>().currentDir);
                 CellEnum cellType = this.tagCell.GetComponent<DragHandler>().currentCellType;
@@ -121,7 +174,7 @@ public class CellManager : MonoBehaviour
                         this.tagCell = this.UnknownCell();
                         break;
                     case CellEnum.cDamage:
-                        this.tagCell = this.DamageCell();
+                        this.DamageCell();
                         break;
                     default:
                         Debug.Log("Unknown cell type!");
@@ -131,6 +184,10 @@ public class CellManager : MonoBehaviour
 
                 
             }
+        }
+        else
+        {
+
         }
 
     }//运行游戏
@@ -152,7 +209,7 @@ public class CellManager : MonoBehaviour
     public RectTransform EndCell()
     {
         clear = true;
-        this.WinState();
+        this.EndState(GameState.gWin);
         return this.tagCell;
     }
     #endregion
@@ -202,11 +259,10 @@ public class CellManager : MonoBehaviour
 
     // 伤害格
     #region
-    public RectTransform DamageCell()
+    public void DamageCell()
     {
         over = true;
-        // ... 初始化全局
-        return this.startCell;  // 返回起点位置
+        this.EndState(GameState.gFail);
     }
     #endregion
     #endregion
@@ -384,10 +440,16 @@ public class CellManager : MonoBehaviour
     }
 
     //游戏获胜
-    private void WinState()
+    private void EndState(GameState state)
     {
         CommonFunction.Instance.SetGameState(false);
-        this.GameButton(GameState.gWin);
+        if (state == GameState.gWin)
+        {  
+            this.GameButton(GameState.gWin);
+        }else if(state == GameState.gFail)
+        {
+            this.GameButton(GameState.gFail);
+        }
     }
 
     private void GameButton(GameState state)
@@ -398,7 +460,7 @@ public class CellManager : MonoBehaviour
             this.btnStartGame.gameObject.SetActive(true);
             this.gameMenu.gameObject.SetActive(false);
             this.gameReset.gameObject.SetActive(false);
-            this.gameWin.gameObject.SetActive(false);
+            this.gameOver.gameObject.SetActive(false);
             this.currentState = state;
 
         }
@@ -407,7 +469,7 @@ public class CellManager : MonoBehaviour
             this.btnStartGame.gameObject.SetActive(false);
             this.gameMenu.gameObject.SetActive(false);
             this.gameReset.gameObject.SetActive(false);
-            this.gameWin.gameObject.SetActive(false);
+            this.gameOver.gameObject.SetActive(false);
             this.currentState = state;
         }
         else if(state == GameState.gPause)
@@ -415,7 +477,7 @@ public class CellManager : MonoBehaviour
 
             this.gameMenu.gameObject.SetActive(true);
             this.gameReset.gameObject.SetActive(false);
-            this.gameWin.gameObject.SetActive(false);
+            this.gameOver.gameObject.SetActive(false);
             CommonFunction.Instance.PauseGame();
         }
         else if(state == GameState.gReset)
@@ -423,13 +485,23 @@ public class CellManager : MonoBehaviour
 
             this.gameMenu.gameObject.SetActive(false);
             this.gameReset.gameObject.SetActive(true);
-            this.gameWin.gameObject.SetActive(false);
+            this.gameOver.gameObject.SetActive(false);
             this.currentState = state;
         }
         else if(state == GameState.gWin)
         {
             this.gameMenu.gameObject.SetActive(false);
-            this.gameWin.gameObject.SetActive(true);
+            this.gameOver.gameObject.SetActive(true);
+            this.resultGame.text = CommonFunction.Instance.ResultGame(state);
+            this.resultGame.color = Color.red;
+            this.currentState = state;
+        }
+        else if (state == GameState.gFail)
+        {
+            this.gameMenu.gameObject.SetActive(false);
+            this.gameOver.gameObject.SetActive(true);
+            this.resultGame.text = CommonFunction.Instance.ResultGame(state);
+            this.resultGame.color = Color.black;
             this.currentState = state;
         }
     }
@@ -443,7 +515,7 @@ public class CellManager : MonoBehaviour
         int row = (int)(this.GetComponent<RectTransform>().sizeDelta.y) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.y);
         int col = (int)(this.GetComponent<RectTransform>().sizeDelta.x) / (int)(this.GetComponent<GridLayoutGroup>().cellSize.x);
         this.grids = new DragHandler[row, col];
-        DragHandler[] cells = GetComponentsInChildren<DragHandler>();
+        DragHandler[] cells = this.GetComponentsInChildren<DragHandler>();
         int index = 0;
         for (int i = 0; i < this.grids.GetLength(0); i++)
         {

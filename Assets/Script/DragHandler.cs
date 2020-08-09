@@ -183,6 +183,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
                     this.parentCell = targetObj.parent.GetComponent<RectTransform>();
                     targetObj.SetParent(repalceParent);
                     targetObj.localPosition = Vector2.zero;
+                    
                 }
 
                 //CommonFunction.Instance.SetGameState(true);
@@ -191,6 +192,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             this.rectTran.SetParent(this.parentCell);
             this.rectTran.localPosition = Vector2.zero;
             this.tempBlock.blocksRaycasts = true;
+            EventListener.Instance.FunctionExecute();
 
         }
         

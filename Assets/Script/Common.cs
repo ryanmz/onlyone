@@ -1,4 +1,6 @@
 ﻿using JetBrains.Annotations;
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -40,6 +42,7 @@ public enum GameState
     gPause = 2,
     gReset = 3,
     gWin = 4,
+    gFail = 5,
 }  //游戏状态
 
 public class CommonFunction:Singleton<CommonFunction>
@@ -154,4 +157,36 @@ public class CommonFunction:Singleton<CommonFunction>
     {
         Time.timeScale = 1.0f;
     }
+
+    public string ResultGame(GameState state)
+    {
+        if(state == GameState.gWin)
+        {
+            return "闯关成功";
+        }
+        else if(state == GameState.gFail)
+        {
+            return "闯关失败";
+        }
+        return "";
+    }
+
+    public void EventDragDownTrigger()
+    {
+
+    }
+
 } //公共方法
+
+public class EventListener : Singleton<EventListener>
+{
+    public delegate void ListenerHandler();
+    public event ListenerHandler execute = null;
+    public void FunctionExecute()
+    {
+        if (execute != null)
+        {
+            execute();
+        }
+    }
+}
