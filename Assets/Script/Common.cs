@@ -27,6 +27,14 @@ public enum CellEnum
 
 } //方格类型
 
+public enum SpCellEnum
+{
+    sNone = 0,
+    sBlank = 1,
+    sClockwise = 2,
+    sAntiClockwise = 3,
+} //特殊方格类型
+
 public enum GameState
 {
     gSet = 0,
@@ -48,6 +56,7 @@ public class CommonFunction:Singleton<CommonFunction>
 
     public float DirectValue(DirectionEnum dir)
     {
+        //Debug.Log(dir.ToString());
         if(dir == DirectionEnum.cUpDir)
         {
             return 90.0f;
@@ -69,6 +78,7 @@ public class CommonFunction:Singleton<CommonFunction>
 
     public DirectionEnum JudgeDir(float angle)
     {
+        //Debug.Log(angle);
         if(angle == 90.0f)
         {
             return DirectionEnum.cUpDir;

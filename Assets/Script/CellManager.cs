@@ -1,10 +1,13 @@
-﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+
 public class CellManager : MonoBehaviour
 {
-
     //数据管理
     #region
 
@@ -16,7 +19,7 @@ public class CellManager : MonoBehaviour
     public float distance;
     public float speed;
     public RectTransform player;
-
+    
 
 
     public DirectionEnum characterDir;   // 角色的移动方向
@@ -140,6 +143,7 @@ public class CellManager : MonoBehaviour
     {
         if (CommonFunction.Instance.GameStart)
         {
+
             this.dir = (this.tagCell.position - this.player.position).normalized;
             this.player.Translate(this.dir * Time.deltaTime * this.speed);
 
@@ -177,6 +181,8 @@ public class CellManager : MonoBehaviour
                         break;
 
                 }
+
+                
             }
         }
         else
@@ -184,10 +190,11 @@ public class CellManager : MonoBehaviour
 
         }
 
-    }//游戏更新
+    }//运行游戏
     #endregion
 
-    //方格类型管理
+
+    //方格类型
     #region
     // 起点(输入为起始方向)
     #region
@@ -228,6 +235,7 @@ public class CellManager : MonoBehaviour
     public RectTransform ActionPointCell(DirectionEnum dir)
     {
         actionPoint++;
+        Debug.Log("Action Point: " + actionPoint);
         return this.SelectNewCell(dir);
     }
     #endregion
@@ -237,10 +245,11 @@ public class CellManager : MonoBehaviour
     public RectTransform UnknownCell()
     {
         DragHandler currentCell = this.tagCell.GetComponent<DragHandler>();
-        // 修改格子属性
+        // 修改格子属性-即时触发(种类与方向检查？)
         if (currentCell.isUnknown == true)
         {
-            currentCell.isUnknown = false;
+            // 这里不能设置成false，以保证重置后可以恢复为unknown
+            //currentCell.isUnknown = false;
             currentCell.currentCellType = currentCell.hiddenCellType;
             currentCell.currentDir = currentCell.hiddenDir;
         }
@@ -258,11 +267,10 @@ public class CellManager : MonoBehaviour
     #endregion
     #endregion
 
-    //游戏状态管理
-    #region
 
-    // 移动 
+    //公共方法
     #region
+    // 移动 
     public RectTransform SelectNewCell(DirectionEnum dir)
     {
         if (dir == DirectionEnum.cUpDir)
@@ -315,8 +323,86 @@ public class CellManager : MonoBehaviour
         }
         return this.tagCell;
     }
+
+    // 处理特殊方格(可选择加入动画效果)
+    #region
+    private void SpCellHandler()
+    {
+        for (int i = 0; i < this.grids.GetLength(0); i++)
+        {
+            for (int j = 0; j < this.grids.GetLength(1); j++)
+            {
+                SpCellEnum sp = this.grids[i, j].spCellType;
+                if (sp != SpCellEnum.sNone)
+                {
+                    if (i != 0)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i - 1, j].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360);
+                                break;
+                        }
+                    }
+                    if (j != 0)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i, j - 1].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360);
+                                break;
+                        }
+                    }
+                    if (i != this.grids.GetLength(0) - 1)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i + 1, j].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360);
+                                break;
+                        }
+                    }
+                    if (j != this.grids.GetLength(1) - 1)
+                    {
+                        switch (sp)
+                        {
+                            case SpCellEnum.sBlank:
+                                this.grids[i, j + 1].currentCellType = CellEnum.cBlank;
+                                break;
+                            case SpCellEnum.sClockwise:
+                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360);
+                                break;
+                            case SpCellEnum.sAntiClockwise:
+                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
     #endregion
 
+    //游戏状态管理
+    #region
     //准备游戏
     private void SetState()
     {
@@ -330,6 +416,8 @@ public class CellManager : MonoBehaviour
         this.InitGridsCells();
         CommonFunction.Instance.SetGameState(true);
         this.GameButton(GameState.gGaming);
+        // search for SpCell and deal with them
+        SpCellHandler();
     }
 
     //暂停游戏
@@ -376,7 +464,7 @@ public class CellManager : MonoBehaviour
             this.currentState = state;
 
         }
-        else if (state == GameState.gGaming)
+        else if(state == GameState.gGaming)
         {
             this.btnStartGame.gameObject.SetActive(false);
             this.gameMenu.gameObject.SetActive(false);
@@ -384,7 +472,7 @@ public class CellManager : MonoBehaviour
             this.gameOver.gameObject.SetActive(false);
             this.currentState = state;
         }
-        else if (state == GameState.gPause)
+        else if(state == GameState.gPause)
         {
 
             this.gameMenu.gameObject.SetActive(true);
@@ -392,7 +480,7 @@ public class CellManager : MonoBehaviour
             this.gameOver.gameObject.SetActive(false);
             CommonFunction.Instance.PauseGame();
         }
-        else if (state == GameState.gReset)
+        else if(state == GameState.gReset)
         {
 
             this.gameMenu.gameObject.SetActive(false);
@@ -400,7 +488,7 @@ public class CellManager : MonoBehaviour
             this.gameOver.gameObject.SetActive(false);
             this.currentState = state;
         }
-        else if (state == GameState.gWin)
+        else if(state == GameState.gWin)
         {
             this.gameMenu.gameObject.SetActive(false);
             this.gameOver.gameObject.SetActive(true);
@@ -419,7 +507,8 @@ public class CellManager : MonoBehaviour
     }
     #endregion
 
-    //游戏地图管理
+
+    //地图方块管理
     #region
     public void InitGridsCells()
     {
@@ -438,10 +527,9 @@ public class CellManager : MonoBehaviour
             }
 
         }
-
+        
 
     }
-
     private int GetRow()
     {
 
@@ -449,7 +537,7 @@ public class CellManager : MonoBehaviour
         {
             for (int j = 0; j < this.grids.GetLength(1); j++)
             {
-                if(this.tagCell.GetComponent<DragHandler>() == this.grids[i, j])
+                if (this.tagCell.GetComponent<DragHandler>() == this.grids[i, j])
                 {
                     return i;
                 }
@@ -474,7 +562,8 @@ public class CellManager : MonoBehaviour
         }
         return 0;
     }
-
     #endregion
 
+
+    #endregion
 }
