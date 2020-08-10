@@ -21,9 +21,8 @@ public enum CellEnum
     cBlank = 2,
     cArrow = 3,
     cActionPoint = 4,
-    cBlock = 5,
-    cUnknown = 6,
-    cDamage = 7,
+    cUnknown = 5,
+    cDamage = 6,
 
 } //方格类型
 
@@ -105,35 +104,31 @@ public class CommonFunction:Singleton<CommonFunction>
     {
         if(cell == CellEnum.cStart)
         {
-            return null;
+            return Resources.Load("Image/Cell/map8", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cEnd)
         {
-            return Resources.Load("Image/blank", typeof(Sprite)) as Sprite; ;
+            return Resources.Load("Image/Cell/map9", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cBlank)
         {
-            return Resources.Load("Image/blank", typeof(Sprite)) as Sprite;
+            return Resources.Load("Image/Cell/map10", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cArrow)
         {
-            return Resources.Load("Image/direct", typeof(Sprite)) as Sprite;
+            return Resources.Load("Image/Cell/map1", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cActionPoint)
         {
-            return null;
-        }
-        else if (cell == CellEnum.cBlock)
-        {
-            return null;
+            return Resources.Load("Image/Cell/map5", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cUnknown)
         {
-            return null;
+            return Resources.Load("Image/Cell/map7", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cDamage)
         {
-            return null;
+            return Resources.Load("Image/Cell/map6", typeof(Sprite)) as Sprite;
         }
         return null;
     }
@@ -171,10 +166,6 @@ public class CommonFunction:Singleton<CommonFunction>
         return "";
     }
 
-    public void EventDragDownTrigger()
-    {
-
-    }
 
 } //公共方法
 

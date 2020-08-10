@@ -27,9 +27,7 @@ public class CellManager : MonoBehaviour
     public bool clear = false;           // 通关标识
     public bool over = false;            // 游戏结束标识
 
-    private GameObject parentAction;
     public DragHandler[] actionCell;
-    public Text actionText;              //行动点文字
     public int actionPoint = 1;          // 行动点
     private int blankPoint = 0;
     #endregion
@@ -92,16 +90,15 @@ public class CellManager : MonoBehaviour
         this.btnExitGame2.onClick.AddListener(CommonFunction.Instance.ExitGame);
         this.btnExitGame3.onClick.AddListener(CommonFunction.Instance.ExitGame);
         EventListener.Instance.execute += new EventListener.ListenerHandler(this.UpdateActionCells);
-        this.parentAction = GameObject.Find("Content");
+
+
     }//事件绑定
 
     void UpdateActionCells()
     {
-        Debug.Log(this.parentAction == null);
-        Debug.Log(this.parentAction.GetComponentsInChildren<DragHandler>() == null);
-        if (this.parentAction.GetComponentsInChildren<DragHandler>() == null)
-            return;
-        this.actionCell = this.parentAction.GetComponentsInChildren<DragHandler>();
+        GameObject parentAction = GameObject.Find("Content");
+        Text actionText = GameObject.Find("BarText").GetComponent<Text>();
+        this.actionCell = parentAction.GetComponentsInChildren<DragHandler>();
         int blankTem = 0;
         for(int i = 0; i < this.actionCell.Length; i++)
         {
@@ -120,7 +117,7 @@ public class CellManager : MonoBehaviour
             this.actionPoint++;
         }
         this.blankPoint = blankTem;
-        this.actionText.text = Convert.ToString(this.actionPoint);
+        actionText.text = Convert.ToString(this.actionPoint);
         if (this.actionPoint <= 0)
         {
             for (int i = 0; i < this.actionCell.Length; i++)
