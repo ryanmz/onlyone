@@ -10,10 +10,12 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     #region
     public CellEnum currentCellType;
     public SpCellEnum spCellType = SpCellEnum.sNone;
-    public bool enableClick = false;
-    public RectTransform parentCell;
+    public static RectTransform parentCell;
     public DirectionEnum currentDir;
+
     public bool visited = false;
+
+    public bool enableClick = false;
     #endregion
 
     //问号格专属
@@ -42,25 +44,44 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         this.rectTran = this.GetComponent<RectTransform>();
         this.cellImage = this.GetComponent<Image>();
         this.originCol = this.GetComponent<Image>().color;
-        this.parentCell = this.rectTran.parent.gameObject.GetComponent<RectTransform>();
+        parentCell = this.rectTran.parent.gameObject.GetComponent<RectTransform>();
         this.tempBlock = this.gameObject.AddComponent<CanvasGroup>();
-        this.SetCellInfo(this.currentCellType, this.currentDir);
+        this.SetCellInfo(this.spCellType,this.currentCellType, this.currentDir);
 
     }
 
     //方格信息设置
-    public void SetCellInfo(CellEnum cellType, DirectionEnum dir)
+    public void SetCellInfo(SpCellEnum spCellType,CellEnum cellType, DirectionEnum dir)
     {
-        this.currentCellType = cellType;
-        
-        if (cellType != CellEnum.cArrow)
-            this.currentDir = DirectionEnum.cNone;
+        if (spCellType == SpCellEnum.sNone)
+        {
+            this.enableClick = false;
+            this.currentCellType = cellType;
+            this.spCellType = spCellType;
+            if (cellType != CellEnum.cArrow && cellType != CellEnum.cUnknown && cellType != CellEnum.cStart)
+                this.currentDir = DirectionEnum.cNone;
+            else
+                this.currentDir = dir;
+
+            if(cellType == CellEnum.cUnknown)
+                this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(DirectionEnum.cNone));
+            else
+                this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+
+            this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
+        }
         else
-            this.currentDir = dir;
+        {
+            this.enableClick = true;
+            this.currentCellType = cellType;
+            if (spCellType != SpCellEnum.sArrow)
+                this.currentDir = DirectionEnum.cNone;
+            else
+                this.currentDir = dir;
 
-        this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
-        this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
-
+            this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+            this.cellImage.sprite = CommonFunction.Instance.SpCellImage(spCellType);
+        }
     }
 
     #endregion
@@ -76,11 +97,14 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             this.cellImage = this.GetComponent<Image>();
             this.cellImage.color = Color.green;
 
+            parentCell = this.rectTran.parent.GetComponent<RectTransform>();
             RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
             Vector2 mouseDown = eventData.position;
             Vector2 mouseUguiPos = new Vector2();
 
             bool isRect = RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, mouseDown, eventData.enterEventCamera, out mouseUguiPos);
+            this.rectTran.SetParent(canvas);
+           
 
             if (isRect)
             {
@@ -105,13 +129,12 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             Vector2 mouseUguiPos = new Vector2();
 
             bool isRect = RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, mouseDown, eventData.enterEventCamera, out mouseUguiPos);
-
+            this.rectTran.SetAsLastSibling();
             if (isRect)
             {
                 this.rectTran.anchoredPosition = this.offset + mouseUguiPos;
             }
 
-            this.rectTran.transform.SetAsFirstSibling();
             //拉扯方向
             #region
             /*
@@ -159,12 +182,14 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         if (this.enableClick && !CommonFunction.Instance.GameStart)
         {
+            Debug.Log("ssssssssssssssssssssssssssssss");
             this.rectTran.localScale = this.fromScale;
             this.cellImage = this.GetComponent<Image>();
             this.cellImage.color = originCol;
 
             if(eventData.pointerEnter == null)
             {
+                this.rectTran.SetParent(parentCell);
                 this.rectTran.localPosition = Vector2.zero;
                 this.tempBlock.blocksRaycasts = true;
                 return;
@@ -172,7 +197,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
 
             RectTransform targetObj = eventData.pointerEnter.GetComponent<RectTransform>();
-            RectTransform repalceParent = this.rectTran.parent.GetComponent<RectTransform>();
+
 
 
             if (targetObj.GetComponent<DragHandler>() != null)
@@ -180,17 +205,27 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
                 if (targetObj.GetComponent<DragHandler>().currentCellType == CellEnum.cBlank)
                 {
-                    this.parentCell = targetObj.parent.GetComponent<RectTransform>();
-                    targetObj.SetParent(repalceParent);
+                    this.rectTran.SetParent(targetObj.parent);
+                    targetObj.SetParent(parentCell);
+                    this.rectTran.localPosition = Vector2.zero;
                     targetObj.localPosition = Vector2.zero;
-                    
+
+                }
+                else
+                {
+                    this.rectTran.SetParent(parentCell);
+                    this.rectTran.localPosition = Vector2.zero;
+
                 }
 
                 //CommonFunction.Instance.SetGameState(true);
             }
- 
-            this.rectTran.SetParent(this.parentCell);
-            this.rectTran.localPosition = Vector2.zero;
+            else
+            {
+                this.rectTran.SetParent(parentCell);
+                this.rectTran.localPosition = Vector2.zero;
+                
+            }
             this.tempBlock.blocksRaycasts = true;
             EventListener.Instance.FunctionExecute();
 

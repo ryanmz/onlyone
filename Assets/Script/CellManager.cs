@@ -27,9 +27,7 @@ public class CellManager : MonoBehaviour
     public bool clear = false;           // 通关标识
     public bool over = false;            // 游戏结束标识
 
-    private GameObject parentAction;
     public DragHandler[] actionCell;
-    public Text actionText;              //行动点文字
     public int actionPoint = 1;          // 行动点
     private int blankPoint = 0;
     #endregion
@@ -70,6 +68,7 @@ public class CellManager : MonoBehaviour
 
     #endregion
 
+
     //生命周期
     #region
     void Start()
@@ -85,6 +84,7 @@ public class CellManager : MonoBehaviour
         this.btnStartGame.onClick.AddListener(this.GamingState);
         this.btnMenuGame.onClick.AddListener(this.PauseState);
         this.btnReturn.onClick.AddListener(this.ReturnState);
+        this.btnResetGame1.onClick.AddListener(this.SetState);
         this.btnReStartGame1.onClick.AddListener(CommonFunction.Instance.ReStartGame);
         this.btnReStartGame2.onClick.AddListener(CommonFunction.Instance.ReStartGame);
         this.btnReStartGame3.onClick.AddListener(CommonFunction.Instance.ReStartGame);
@@ -92,16 +92,15 @@ public class CellManager : MonoBehaviour
         this.btnExitGame2.onClick.AddListener(CommonFunction.Instance.ExitGame);
         this.btnExitGame3.onClick.AddListener(CommonFunction.Instance.ExitGame);
         EventListener.Instance.execute += new EventListener.ListenerHandler(this.UpdateActionCells);
-        this.parentAction = GameObject.Find("Content");
+
+
     }//事件绑定
 
     void UpdateActionCells()
     {
-        Debug.Log(this.parentAction == null);
-        Debug.Log(this.parentAction.GetComponentsInChildren<DragHandler>() == null);
-        if (this.parentAction.GetComponentsInChildren<DragHandler>() == null)
-            return;
-        this.actionCell = this.parentAction.GetComponentsInChildren<DragHandler>();
+        GameObject parentAction = GameObject.Find("Content");
+        Text actionText = GameObject.Find("BarText").GetComponent<Text>();
+        this.actionCell = parentAction.GetComponentsInChildren<DragHandler>();
         int blankTem = 0;
         for(int i = 0; i < this.actionCell.Length; i++)
         {
@@ -120,7 +119,7 @@ public class CellManager : MonoBehaviour
             this.actionPoint++;
         }
         this.blankPoint = blankTem;
-        this.actionText.text = Convert.ToString(this.actionPoint);
+        actionText.text = Convert.ToString(this.actionPoint);
         if (this.actionPoint <= 0)
         {
             for (int i = 0; i < this.actionCell.Length; i++)
@@ -244,8 +243,10 @@ public class CellManager : MonoBehaviour
     #region
     public RectTransform ActionPointCell(DirectionEnum dir)
     {
-        actionPoint++;
-        Debug.Log("Action Point: " + actionPoint);
+        this.actionPoint++;
+        Text actionText = GameObject.Find("BarText").GetComponent<Text>();
+        actionText.text = Convert.ToString(this.actionPoint);
+        Debug.Log("Action Point: " + this.actionPoint);
         return this.SelectNewCell(dir);
     }
     #endregion
@@ -261,9 +262,11 @@ public class CellManager : MonoBehaviour
             // 这里不能设置成false，以保证重置后可以恢复为unknown
             //currentCell.isUnknown = false;
             currentCell.currentCellType = currentCell.hiddenCellType;
+            this.tagCell.GetComponent<DragHandler>().SetCellInfo(SpCellEnum.sNone, currentCell.currentCellType, currentCell.currentDir);
             //currentCell.currentDir = currentCell.hiddenDir;
+
         }
-        return this.SelectNewCell(currentCell.currentDir);
+        return this.SelectNewCell(this.characterDir);
     }
     #endregion
 
@@ -288,6 +291,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetRow() < 1)
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -300,6 +304,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetRow() == (this.grids.GetLength(0) - 1))
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -312,6 +317,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetCol() < 1)
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -324,6 +330,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetCol() == (this.grids.GetLength(1) - 1))
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -366,15 +373,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i - 1, j].currentCellType = CellEnum.cBlank;
+                                this.grids[i - 1, j].SetCellInfo(SpCellEnum.sNone,CellEnum.cBlank, this.grids[i - 1, j].currentDir);
                                 this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360);
+                                this.grids[i - 1, j].SetCellInfo(SpCellEnum.sNone, this.grids[i - 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360));
                                 this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360);
+                                this.grids[i - 1, j].SetCellInfo(SpCellEnum.sNone, this.grids[i - 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360));
                                 this.grids[i - 1, j].visited = false;
                                 break;
                         }
@@ -384,15 +391,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j - 1].currentCellType = CellEnum.cBlank;
+                                this.grids[i, j - 1].SetCellInfo(SpCellEnum.sNone,CellEnum.cBlank, this.grids[i, j - 1].currentDir);
                                 this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360);
+                                this.grids[i, j - 1].SetCellInfo(SpCellEnum.sNone, this.grids[i, j - 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360));
                                 this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360);
+                                this.grids[i, j - 1].SetCellInfo(SpCellEnum.sNone, this.grids[i, j - 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360));
                                 this.grids[i, j - 1].visited = false;
                                 break;
                         }
@@ -402,15 +409,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i + 1, j].currentCellType = CellEnum.cBlank;
+                                this.grids[i + 1, j].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i + 1, j].currentDir);
                                 this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360);
+                                this.grids[i + 1, j].SetCellInfo(SpCellEnum.sNone,this.grids[i + 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360));
                                 this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360);
+                                this.grids[i + 1, j].SetCellInfo(SpCellEnum.sNone, this.grids[i + 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360));
                                 this.grids[i + 1, j].visited = false;
                                 break;
                         }
@@ -420,19 +427,20 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j + 1].currentCellType = CellEnum.cBlank;
+                                this.grids[i, j + 1].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i, j + 1].currentDir);
                                 this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360);
+                                this.grids[i, j + 1].SetCellInfo(SpCellEnum.sNone, this.grids[i, j + 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360));
                                 this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360);
+                                this.grids[i, j + 1].SetCellInfo(SpCellEnum.sNone, this.grids[i, j + 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360));
                                 this.grids[i, j + 1].visited = false;
                                 break;
                         }
                     }
+                    CommonFunction.Instance.SpCell2NormalCell(grids[i, j]);
                 }
             }
         }
@@ -445,12 +453,18 @@ public class CellManager : MonoBehaviour
     private void SetState()
     {
         CommonFunction.Instance.SetGameState(false);
+        this.player.parent = this.startCell.parent;
+        this.player.localPosition = this.startCell.localPosition;
+        this.characterDir = this.startCell.GetComponent<DragHandler>().currentDir;
+        this.tagCell = this.startCell;
         this.GameButton(GameState.gSet);
     }
 
     //进行游戏
     private void GamingState()
     {
+        this.player.parent = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        this.player.SetSiblingIndex(2);
         this.InitGridsCells();
         CommonFunction.Instance.SetGameState(true);
         this.GameButton(GameState.gGaming);

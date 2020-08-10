@@ -21,9 +21,8 @@ public enum CellEnum
     cBlank = 2,
     cArrow = 3,
     cActionPoint = 4,
-    cBlock = 5,
-    cUnknown = 6,
-    cDamage = 7,
+    cUnknown = 5,
+    cDamage = 6,
 
 } //方格类型
 
@@ -33,6 +32,7 @@ public enum SpCellEnum
     sBlank = 1,
     sClockwise = 2,
     sAntiClockwise = 3,
+    sArrow = 4,
 } //特殊方格类型
 
 public enum GameState
@@ -101,37 +101,78 @@ public class CommonFunction:Singleton<CommonFunction>
 
     }
 
+    public void SpCell2NormalCell(DragHandler cell)
+    {
+        if (cell.spCellType == SpCellEnum.sArrow)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cArrow, cell.currentDir);
+        }
+        else if (cell.spCellType == SpCellEnum.sClockwise)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, cell.currentDir);
+        }
+        else if (cell.spCellType == SpCellEnum.sAntiClockwise)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, cell.currentDir);
+        }
+        else if (cell.spCellType == SpCellEnum.sBlank)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, cell.currentDir);
+        }
+    }//将特殊方格转换成普通格子
+
     public Sprite CellImage(CellEnum cell)
     {
         if(cell == CellEnum.cStart)
         {
-            return null;
+            return Resources.Load("Image/Cell/map8", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cEnd)
         {
-            return Resources.Load("Image/blank", typeof(Sprite)) as Sprite; ;
+            return Resources.Load("Image/Cell/map9", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cBlank)
         {
-            return Resources.Load("Image/blank", typeof(Sprite)) as Sprite;
+            return Resources.Load("Image/Cell/map10", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cArrow)
         {
-            return Resources.Load("Image/direct", typeof(Sprite)) as Sprite;
+            return Resources.Load("Image/Cell/map1", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cActionPoint)
         {
-            return null;
-        }
-        else if (cell == CellEnum.cBlock)
-        {
-            return null;
+            return Resources.Load("Image/Cell/map5", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cUnknown)
         {
-            return null;
+            return Resources.Load("Image/Cell/map7", typeof(Sprite)) as Sprite;
         }
         else if (cell == CellEnum.cDamage)
+        {
+            return Resources.Load("Image/Cell/map6", typeof(Sprite)) as Sprite;
+        }
+        return null;
+    }
+
+    public Sprite SpCellImage(SpCellEnum cell)
+    {
+        if(cell == SpCellEnum.sAntiClockwise)
+        {
+            return Resources.Load("Image/OperationalCell/player_hover6", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == SpCellEnum.sClockwise)
+        {
+            return Resources.Load("Image/OperationalCell/player_hover5", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == SpCellEnum.sBlank)
+        {
+            return Resources.Load("Image/OperationalCell/player7", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == SpCellEnum.sArrow)
+        {
+            return Resources.Load("Image/OperationalCell/player1", typeof(Sprite)) as Sprite;
+        }
+        else if(cell == SpCellEnum.sNone)
         {
             return null;
         }
@@ -171,10 +212,6 @@ public class CommonFunction:Singleton<CommonFunction>
         return "";
     }
 
-    public void EventDragDownTrigger()
-    {
-
-    }
 
 } //公共方法
 
