@@ -366,15 +366,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i - 1, j].currentCellType = CellEnum.cBlank;
+                                this.grids[i - 1, j].SetCellInfo(CellEnum.cBlank, this.grids[i - 1, j].currentDir);
                                 this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360);
+                                this.grids[i - 1, j].SetCellInfo(this.grids[i - 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360));
                                 this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360);
+                                this.grids[i - 1, j].SetCellInfo(this.grids[i - 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360));
                                 this.grids[i - 1, j].visited = false;
                                 break;
                         }
@@ -384,15 +384,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j - 1].currentCellType = CellEnum.cBlank;
+                                this.grids[i, j - 1].SetCellInfo(CellEnum.cBlank, this.grids[i, j - 1].currentDir);
                                 this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360);
+                                this.grids[i, j - 1].SetCellInfo(this.grids[i, j - 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360));
                                 this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360);
+                                this.grids[i, j - 1].SetCellInfo(this.grids[i, j - 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360));
                                 this.grids[i, j - 1].visited = false;
                                 break;
                         }
@@ -402,15 +402,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i + 1, j].currentCellType = CellEnum.cBlank;
+                                this.grids[i + 1, j].SetCellInfo(CellEnum.cBlank, this.grids[i + 1, j].currentDir);
                                 this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360);
+                                this.grids[i + 1, j].SetCellInfo(this.grids[i + 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360));
                                 this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360);
+                                this.grids[i + 1, j].SetCellInfo(this.grids[i + 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360));
                                 this.grids[i + 1, j].visited = false;
                                 break;
                         }
@@ -420,15 +420,15 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j + 1].currentCellType = CellEnum.cBlank;
+                                this.grids[i, j + 1].SetCellInfo(CellEnum.cBlank, this.grids[i, j + 1].currentDir);
                                 this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360);
+                                this.grids[i, j + 1].SetCellInfo(this.grids[i, j + 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360));
                                 this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360);
+                                this.grids[i, j + 1].SetCellInfo(this.grids[i, j + 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360));
                                 this.grids[i, j + 1].visited = false;
                                 break;
                         }
