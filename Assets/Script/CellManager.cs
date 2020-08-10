@@ -224,7 +224,16 @@ public class CellManager : MonoBehaviour
     #region
     public RectTransform ArrowCell(DirectionEnum dir)
     {
-        return this.SelectNewCell(dir);
+        RectTransform tpCell = this.SelectNewCell(dir);
+        if (tpCell == this.tagCell || tpCell.GetComponent<DragHandler>().visited)
+        {
+            this.ResetState();
+        }
+        else
+        {
+            this.tagCell.GetComponent<DragHandler>().visited = true;
+        }
+        return tpCell;
     }
     #endregion
 
@@ -269,6 +278,7 @@ public class CellManager : MonoBehaviour
     //公共方法
     #region
     // 移动 
+    #region
     public RectTransform SelectNewCell(DirectionEnum dir)
     {
         if (dir == DirectionEnum.cUpDir)
@@ -321,6 +331,21 @@ public class CellManager : MonoBehaviour
         }
         return this.tagCell;
     }
+    #endregion
+
+    // 初始化访问值
+    #region
+    public void ResetVisited()
+    {
+        for (int i = 0; i < this.grids.GetLength(0); i++)
+        {
+            for (int j = 0; j < this.grids.GetLength(1); j++)
+            {
+                this.grids[i, j].visited = false;
+            }
+        }
+    }
+    #endregion
 
     // 处理特殊方格(可选择加入动画效果)
     #region
@@ -338,13 +363,16 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i - 1, j].currentCellType = CellEnum.cBlank;
+                                this.grids[i - 1, j].SetCellInfo(CellEnum.cBlank, this.grids[i - 1, j].currentDir);
+                                this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360);
+                                this.grids[i - 1, j].SetCellInfo(this.grids[i - 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 270.0f) % 360));
+                                this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i - 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360);
+                                this.grids[i - 1, j].SetCellInfo(this.grids[i - 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i - 1, j].currentDir) + 90.0f) % 360));
+                                this.grids[i - 1, j].visited = false;
                                 break;
                         }
                     }
@@ -353,13 +381,16 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j - 1].currentCellType = CellEnum.cBlank;
+                                this.grids[i, j - 1].SetCellInfo(CellEnum.cBlank, this.grids[i, j - 1].currentDir);
+                                this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360);
+                                this.grids[i, j - 1].SetCellInfo(this.grids[i, j - 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 270.0f) % 360));
+                                this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i, j - 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360);
+                                this.grids[i, j - 1].SetCellInfo(this.grids[i, j - 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j - 1].currentDir) + 90.0f) % 360));
+                                this.grids[i, j - 1].visited = false;
                                 break;
                         }
                     }
@@ -368,13 +399,16 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i + 1, j].currentCellType = CellEnum.cBlank;
+                                this.grids[i + 1, j].SetCellInfo(CellEnum.cBlank, this.grids[i + 1, j].currentDir);
+                                this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360);
+                                this.grids[i + 1, j].SetCellInfo(this.grids[i + 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 270.0f) % 360));
+                                this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i + 1, j].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360);
+                                this.grids[i + 1, j].SetCellInfo(this.grids[i + 1, j].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i + 1, j].currentDir) + 90.0f) % 360));
+                                this.grids[i + 1, j].visited = false;
                                 break;
                         }
                     }
@@ -383,13 +417,16 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j + 1].currentCellType = CellEnum.cBlank;
+                                this.grids[i, j + 1].SetCellInfo(CellEnum.cBlank, this.grids[i, j + 1].currentDir);
+                                this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
-                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360);
+                                this.grids[i, j + 1].SetCellInfo(this.grids[i, j + 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 270.0f) % 360));
+                                this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sAntiClockwise:
-                                this.grids[i, j + 1].currentDir = CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360);
+                                this.grids[i, j + 1].SetCellInfo(this.grids[i, j + 1].currentCellType, CommonFunction.Instance.JudgeDir((CommonFunction.Instance.DirectValue(this.grids[i, j + 1].currentDir) + 90.0f) % 360));
+                                this.grids[i, j + 1].visited = false;
                                 break;
                         }
                     }
@@ -435,6 +472,7 @@ public class CellManager : MonoBehaviour
     {
         CommonFunction.Instance.SetGameState(false);
         this.GameButton(GameState.gReset);
+        this.ResetVisited();
     }
 
     //游戏获胜
