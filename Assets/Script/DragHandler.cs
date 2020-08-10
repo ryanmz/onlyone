@@ -14,6 +14,8 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     public static RectTransform parentCell;
     public DirectionEnum currentDir;
 
+    public bool visited = false;
+
     #endregion
 
     //问号格专属
@@ -62,7 +64,6 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
 
     }
-
 
     #endregion
 
