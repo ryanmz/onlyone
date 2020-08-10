@@ -10,12 +10,12 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     #region
     public CellEnum currentCellType;
     public SpCellEnum spCellType = SpCellEnum.sNone;
-    public bool enableClick = false;
     public static RectTransform parentCell;
     public DirectionEnum currentDir;
 
     public bool visited = false;
 
+    public bool enableClick = false;
     #endregion
 
     //问号格专属
@@ -55,18 +55,24 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         if (spCellType == SpCellEnum.sNone)
         {
+            this.enableClick = false;
             this.currentCellType = cellType;
-
-            if (cellType != CellEnum.cArrow)
+            this.spCellType = spCellType;
+            if (cellType != CellEnum.cArrow && cellType != CellEnum.cUnknown && cellType != CellEnum.cStart)
                 this.currentDir = DirectionEnum.cNone;
             else
                 this.currentDir = dir;
 
-            this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+            if(cellType == CellEnum.cUnknown)
+                this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(DirectionEnum.cNone));
+            else
+                this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+
             this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
         }
         else
         {
+            this.enableClick = true;
             this.currentCellType = cellType;
             if (spCellType != SpCellEnum.sArrow)
                 this.currentDir = DirectionEnum.cNone;

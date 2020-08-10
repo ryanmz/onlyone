@@ -68,6 +68,7 @@ public class CellManager : MonoBehaviour
 
     #endregion
 
+
     //生命周期
     #region
     void Start()
@@ -83,6 +84,7 @@ public class CellManager : MonoBehaviour
         this.btnStartGame.onClick.AddListener(this.GamingState);
         this.btnMenuGame.onClick.AddListener(this.PauseState);
         this.btnReturn.onClick.AddListener(this.ReturnState);
+        this.btnResetGame1.onClick.AddListener(this.SetState);
         this.btnReStartGame1.onClick.AddListener(CommonFunction.Instance.ReStartGame);
         this.btnReStartGame2.onClick.AddListener(CommonFunction.Instance.ReStartGame);
         this.btnReStartGame3.onClick.AddListener(CommonFunction.Instance.ReStartGame);
@@ -241,8 +243,10 @@ public class CellManager : MonoBehaviour
     #region
     public RectTransform ActionPointCell(DirectionEnum dir)
     {
-        actionPoint++;
-        Debug.Log("Action Point: " + actionPoint);
+        this.actionPoint++;
+        Text actionText = GameObject.Find("BarText").GetComponent<Text>();
+        actionText.text = Convert.ToString(this.actionPoint);
+        Debug.Log("Action Point: " + this.actionPoint);
         return this.SelectNewCell(dir);
     }
     #endregion
@@ -258,9 +262,11 @@ public class CellManager : MonoBehaviour
             // 这里不能设置成false，以保证重置后可以恢复为unknown
             //currentCell.isUnknown = false;
             currentCell.currentCellType = currentCell.hiddenCellType;
+            this.tagCell.GetComponent<DragHandler>().SetCellInfo(SpCellEnum.sNone, currentCell.currentCellType, currentCell.currentDir);
             //currentCell.currentDir = currentCell.hiddenDir;
+
         }
-        return this.SelectNewCell(currentCell.currentDir);
+        return this.SelectNewCell(this.characterDir);
     }
     #endregion
 
@@ -285,6 +291,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetRow() < 1)
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -297,6 +304,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetRow() == (this.grids.GetLength(0) - 1))
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -309,6 +317,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetCol() < 1)
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -321,6 +330,7 @@ public class CellManager : MonoBehaviour
         {
             if (this.GetCol() == (this.grids.GetLength(1) - 1))
             {
+                this.ResetState();
                 return this.tagCell;
             }
             else
@@ -430,6 +440,7 @@ public class CellManager : MonoBehaviour
                                 break;
                         }
                     }
+                    CommonFunction.Instance.SpCell2NormalCell(grids[i, j]);
                 }
             }
         }
@@ -442,12 +453,18 @@ public class CellManager : MonoBehaviour
     private void SetState()
     {
         CommonFunction.Instance.SetGameState(false);
+        this.player.parent = this.startCell.parent;
+        this.player.localPosition = this.startCell.localPosition;
+        this.characterDir = this.startCell.GetComponent<DragHandler>().currentDir;
+        this.tagCell = this.startCell;
         this.GameButton(GameState.gSet);
     }
 
     //进行游戏
     private void GamingState()
     {
+        this.player.parent = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        this.player.SetSiblingIndex(2);
         this.InitGridsCells();
         CommonFunction.Instance.SetGameState(true);
         this.GameButton(GameState.gGaming);

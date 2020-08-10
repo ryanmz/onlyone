@@ -101,6 +101,26 @@ public class CommonFunction:Singleton<CommonFunction>
 
     }
 
+    public void SpCell2NormalCell(DragHandler cell)
+    {
+        if (cell.spCellType == SpCellEnum.sArrow)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cArrow, cell.currentDir);
+        }
+        else if (cell.spCellType == SpCellEnum.sClockwise)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, cell.currentDir);
+        }
+        else if (cell.spCellType == SpCellEnum.sAntiClockwise)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, cell.currentDir);
+        }
+        else if (cell.spCellType == SpCellEnum.sBlank)
+        {
+            cell.SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, cell.currentDir);
+        }
+    }//将特殊方格转换成普通格子
+
     public Sprite CellImage(CellEnum cell)
     {
         if(cell == CellEnum.cStart)

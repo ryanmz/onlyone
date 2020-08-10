@@ -214,8 +214,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 1
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!1 &53955777
@@ -271,8 +271,8 @@ MonoBehaviour:
   currentCellType: 1
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &53955780
@@ -364,10 +364,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
-  spCellType: 0
+  spCellType: 2
   enableClick: 1
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &111896513
@@ -535,10 +535,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
-  spCellType: 0
+  spCellType: 1
   enableClick: 1
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &173605476
@@ -708,13 +708,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7af540d41d5c22438d8311ae9d320d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCellType: 3
+  currentCellType: 5
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 2
-  isUnknown: 0
-  hiddenCellType: 0
+  visited: 0
+  isUnknown: 1
+  hiddenCellType: 3
 --- !u!114 &218424219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -806,8 +806,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &230845811
@@ -1053,8 +1053,8 @@ MonoBehaviour:
   currentCellType: 1
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &288988052
@@ -1303,10 +1303,10 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 1
+  visited: 0
   isUnknown: 0
-  hiddenCellType: 0
+  hiddenCellType: 3
 --- !u!114 &349141047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1474,8 +1474,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &394932342
@@ -2030,8 +2030,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &541862384
@@ -2125,8 +2125,8 @@ MonoBehaviour:
   currentCellType: 1
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &553037221
@@ -2255,11 +2255,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7af540d41d5c22438d8311ae9d320d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCellType: 3
+  currentCellType: 0
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 2
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!1 &614009240
@@ -2533,8 +2533,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &706864319
@@ -2748,8 +2748,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &716239762
@@ -2979,8 +2979,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -106.26, y: 159}
-  m_SizeDelta: {x: 43.017914, y: 43.017914}
+  m_AnchoredPosition: {x: -102, y: 102}
+  m_SizeDelta: {x: 43.017944, y: 43.017914}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &823870931
 MonoBehaviour:
@@ -3193,8 +3193,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &856858483
@@ -3484,8 +3484,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 3
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &934382084
@@ -3579,8 +3579,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 3
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &943483841
@@ -3750,8 +3750,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &949136272
@@ -3845,8 +3845,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1022355649
@@ -4247,8 +4247,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 1
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1117760351
@@ -4421,8 +4421,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 2
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1137682706
@@ -4604,10 +4604,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
-  spCellType: 0
+  spCellType: 3
   enableClick: 1
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1161714740
@@ -5008,8 +5008,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 3
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1220909761
@@ -5258,8 +5258,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 2
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1262802745
@@ -5579,10 +5579,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
-  spCellType: 0
+  spCellType: 3
   enableClick: 1
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1332785710
@@ -5872,10 +5872,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
-  spCellType: 0
+  spCellType: 2
   enableClick: 1
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1400036893
@@ -6469,8 +6469,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 3
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1490379858
@@ -6638,10 +6638,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCellType: 3
-  spCellType: 0
+  spCellType: 4
   enableClick: 1
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1501064488
@@ -7402,8 +7402,8 @@ MonoBehaviour:
   currentCellType: 2
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 0
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1616178528
@@ -7898,7 +7898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tagCell: {fileID: 609907413}
-  startCell: {fileID: 0}
+  startCell: {fileID: 609907413}
   distance: 1
   speed: 100
   player: {fileID: 823870930}
@@ -8275,8 +8275,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 3
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!1 &1871987346
@@ -8487,8 +8487,8 @@ MonoBehaviour:
   currentCellType: 3
   spCellType: 0
   enableClick: 0
-  parentCell: {fileID: 0}
   currentDir: 2
+  visited: 0
   isUnknown: 0
   hiddenCellType: 0
 --- !u!114 &1900298811
@@ -9028,10 +9028,10 @@ RectTransform:
   m_Father: {fileID: 1465779559}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 221.6, y: -0.0020905}
-  m_SizeDelta: {x: 98.79794, y: 377.0042}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -88, y: -0.000000045868}
+  m_SizeDelta: {x: 98.79797, y: 377.0042}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2087255385
 MonoBehaviour:
