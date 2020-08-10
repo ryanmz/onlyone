@@ -32,6 +32,7 @@ public enum SpCellEnum
     sBlank = 1,
     sClockwise = 2,
     sAntiClockwise = 3,
+    sArrow = 4,
 } //特殊方格类型
 
 public enum GameState
@@ -129,6 +130,31 @@ public class CommonFunction:Singleton<CommonFunction>
         else if (cell == CellEnum.cDamage)
         {
             return Resources.Load("Image/Cell/map6", typeof(Sprite)) as Sprite;
+        }
+        return null;
+    }
+
+    public Sprite SpCellImage(SpCellEnum cell)
+    {
+        if(cell == SpCellEnum.sAntiClockwise)
+        {
+            return Resources.Load("Image/OperationalCell/player_hover6", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == SpCellEnum.sClockwise)
+        {
+            return Resources.Load("Image/OperationalCell/player_hover5", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == SpCellEnum.sBlank)
+        {
+            return Resources.Load("Image/OperationalCell/player7", typeof(Sprite)) as Sprite;
+        }
+        else if (cell == SpCellEnum.sArrow)
+        {
+            return Resources.Load("Image/OperationalCell/player1", typeof(Sprite)) as Sprite;
+        }
+        else if(cell == SpCellEnum.sNone)
+        {
+            return null;
         }
         return null;
     }

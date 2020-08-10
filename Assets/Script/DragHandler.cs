@@ -46,23 +46,36 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         this.originCol = this.GetComponent<Image>().color;
         parentCell = this.rectTran.parent.gameObject.GetComponent<RectTransform>();
         this.tempBlock = this.gameObject.AddComponent<CanvasGroup>();
-        this.SetCellInfo(this.currentCellType, this.currentDir);
+        this.SetCellInfo(this.spCellType,this.currentCellType, this.currentDir);
 
     }
 
     //方格信息设置
-    public void SetCellInfo(CellEnum cellType, DirectionEnum dir)
+    public void SetCellInfo(SpCellEnum spCellType,CellEnum cellType, DirectionEnum dir)
     {
-        this.currentCellType = cellType;
-        
-        if (cellType != CellEnum.cArrow)
-            this.currentDir = DirectionEnum.cNone;
+        if (spCellType == SpCellEnum.sNone)
+        {
+            this.currentCellType = cellType;
+
+            if (cellType != CellEnum.cArrow)
+                this.currentDir = DirectionEnum.cNone;
+            else
+                this.currentDir = dir;
+
+            this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+            this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
+        }
         else
-            this.currentDir = dir;
+        {
+            this.currentCellType = cellType;
+            if (spCellType != SpCellEnum.sArrow)
+                this.currentDir = DirectionEnum.cNone;
+            else
+                this.currentDir = dir;
 
-        this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
-        this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
-
+            this.rectTran.localRotation = Quaternion.Euler(0, 0, CommonFunction.Instance.DirectValue(this.currentDir));
+            this.cellImage.sprite = CommonFunction.Instance.SpCellImage(spCellType);
+        }
     }
 
     #endregion
