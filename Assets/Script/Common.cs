@@ -1,4 +1,6 @@
 ﻿using JetBrains.Annotations;
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +27,14 @@ public enum CellEnum
 
 } //方格类型
 
+public enum SpCellEnum
+{
+    sNone = 0,
+    sBlank = 1,
+    sClockwise = 2,
+    sAntiClockwise = 3,
+} //特殊方格类型
+
 public enum GameState
 {
     gSet = 0,
@@ -32,6 +42,7 @@ public enum GameState
     gPause = 2,
     gReset = 3,
     gWin = 4,
+    gFail = 5,
 }  //游戏状态
 
 public class CommonFunction:Singleton<CommonFunction>
@@ -45,6 +56,7 @@ public class CommonFunction:Singleton<CommonFunction>
 
     public float DirectValue(DirectionEnum dir)
     {
+        //Debug.Log(dir.ToString());
         if(dir == DirectionEnum.cUpDir)
         {
             return 90.0f;
@@ -66,6 +78,7 @@ public class CommonFunction:Singleton<CommonFunction>
 
     public DirectionEnum JudgeDir(float angle)
     {
+        //Debug.Log(angle);
         if(angle == 90.0f)
         {
             return DirectionEnum.cUpDir;
@@ -144,4 +157,36 @@ public class CommonFunction:Singleton<CommonFunction>
     {
         Time.timeScale = 1.0f;
     }
+
+    public string ResultGame(GameState state)
+    {
+        if(state == GameState.gWin)
+        {
+            return "闯关成功";
+        }
+        else if(state == GameState.gFail)
+        {
+            return "闯关失败";
+        }
+        return "";
+    }
+
+    public void EventDragDownTrigger()
+    {
+
+    }
+
 } //公共方法
+
+public class EventListener : Singleton<EventListener>
+{
+    public delegate void ListenerHandler();
+    public event ListenerHandler execute = null;
+    public void FunctionExecute()
+    {
+        if (execute != null)
+        {
+            execute();
+        }
+    }
+}

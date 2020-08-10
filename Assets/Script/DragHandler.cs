@@ -9,16 +9,18 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     //公有变量
     #region
     public CellEnum currentCellType;
+    public SpCellEnum spCellType = SpCellEnum.sNone;
     public bool enableClick = false;
     public RectTransform parentCell;
     public DirectionEnum currentDir;
+    public bool visited = false;
     #endregion
 
     //问号格专属
     #region
     public bool isUnknown = false;
-    public CellEnum hiddenCellType;
-    public DirectionEnum hiddenDir;
+    public CellEnum hiddenCellType = CellEnum.cBlank;
+    //public DirectionEnum hiddenDir;
     #endregion
 
     //私有变量
@@ -60,7 +62,6 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         this.cellImage.sprite = CommonFunction.Instance.CellImage(cellType);
 
     }
-
 
     #endregion
 
@@ -182,6 +183,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
                     this.parentCell = targetObj.parent.GetComponent<RectTransform>();
                     targetObj.SetParent(repalceParent);
                     targetObj.localPosition = Vector2.zero;
+                    
                 }
 
                 //CommonFunction.Instance.SetGameState(true);
@@ -190,6 +192,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             this.rectTran.SetParent(this.parentCell);
             this.rectTran.localPosition = Vector2.zero;
             this.tempBlock.blocksRaycasts = true;
+            EventListener.Instance.FunctionExecute();
 
         }
         
