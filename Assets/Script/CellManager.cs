@@ -373,7 +373,10 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i - 1, j].SetCellInfo(SpCellEnum.sNone,CellEnum.cBlank, this.grids[i - 1, j].currentDir);
+                                if (this.grids[i - 1, j].currentCellType != CellEnum.cStart && this.grids[i - 1, j].currentCellType != CellEnum.cEnd)
+                                {
+                                    this.grids[i - 1, j].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i - 1, j].currentDir);
+                                }
                                 this.grids[i - 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
@@ -391,7 +394,10 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j - 1].SetCellInfo(SpCellEnum.sNone,CellEnum.cBlank, this.grids[i, j - 1].currentDir);
+                                if (this.grids[i, j - 1].currentCellType != CellEnum.cStart && this.grids[i, j - 1].currentCellType != CellEnum.cEnd)
+                                {
+                                    this.grids[i, j - 1].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i, j - 1].currentDir);
+                                }
                                 this.grids[i, j - 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
@@ -409,7 +415,10 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i + 1, j].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i + 1, j].currentDir);
+                                if (this.grids[i + 1, j].currentCellType != CellEnum.cStart && this.grids[i + 1, j].currentCellType != CellEnum.cEnd)
+                                {
+                                    this.grids[i + 1, j].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i + 1, j].currentDir);
+                                }
                                 this.grids[i + 1, j].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
@@ -427,7 +436,10 @@ public class CellManager : MonoBehaviour
                         switch (sp)
                         {
                             case SpCellEnum.sBlank:
-                                this.grids[i, j + 1].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i, j + 1].currentDir);
+                                if (this.grids[i, j + 1].currentCellType != CellEnum.cStart && this.grids[i, j + 1].currentCellType != CellEnum.cEnd)
+                                {
+                                    this.grids[i, j + 1].SetCellInfo(SpCellEnum.sNone, CellEnum.cBlank, this.grids[i, j + 1].currentDir);
+                                }
                                 this.grids[i, j + 1].visited = false;
                                 break;
                             case SpCellEnum.sClockwise:
